@@ -28,3 +28,24 @@ export async function createInvitation(roleId, ownerId, memberId) {
         throw error;
     }
 }
+
+export async function updateInvitationStatus(roleId, memberId, status) {
+    try {
+        return await db.query(
+            'UPDATE role_invitations SET status = $1 WHERE role_id = $2 AND member_id = $3 AND status = \'pending\'',
+            [status, roleId, memberId]
+        );
+    } catch (error) {
+        console.error('Error updating invitation status:', error);
+        throw error;
+    }
+}
+
+export async function getRoleInvitationByMemberId(memberId) {
+    try {
+        return await db.query('SELECT * FROM role_invitations WHERE member_id = $1', [memberId]);
+    } catch (error) {
+        console.error('Error getting role invitation by member ID:', error);
+        throw error;
+    }
+}

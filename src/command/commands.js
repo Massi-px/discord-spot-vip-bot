@@ -56,6 +56,22 @@ commandManager.addCommand(
     ]
 );
 
+commandManager.addCommand(
+    'accept-role',
+    'Accept an invitation to a role',
+    1,
+    [0, 1],
+    [0, 1, 2],
+    [
+        {
+            type: 8,
+            name: 'roleid',
+            description: 'ID of the role',
+            required: true,
+        },
+    ]
+);
+
 commandManager.installCommands().then(() => {
     console.log('Commands installed successfully');
 }).catch((error) => {
