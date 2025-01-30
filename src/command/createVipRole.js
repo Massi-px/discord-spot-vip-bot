@@ -43,7 +43,7 @@ export async function handleCreateRoleCommand(req, res) {
             throw new Error(`Error adding role to owner: ${memberResponse.statusText}`);
         }
 
-        await createRole(role.name, ownerId);
+        await createRole(role.id, role.name, ownerId);
 
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

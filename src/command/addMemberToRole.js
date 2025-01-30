@@ -37,7 +37,8 @@ export async function handleAddMemberToRoleCommand(req, res) {
     }
 
     try {
-        await createInvitation(roleId, memberId);
+        console.log(member.user.id)
+        await createInvitation(roleId, member.user.id, memberId);
 
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

@@ -9,11 +9,11 @@ export async function getRoles() {
     }
 }
 
-export async function createRole(name, ownerId) {
+export async function createRole(id, name, ownerId) {
     try {
         const result = await db.query(
-            'INSERT INTO roles (name, owner_id) VALUES ($1, $2) RETURNING *',
-            [name, ownerId]
+            'INSERT INTO roles (id, name, owner_id) VALUES ($1, $2, $3) RETURNING *',
+            [id, name, ownerId]
         );
         return result[0];
     } catch (error) {

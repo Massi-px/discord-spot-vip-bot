@@ -9,7 +9,7 @@ export  async function getRoleInvitations() {
     }
 }
 
-export async function createInvitation(roleId, memberId) {
+export async function createInvitation(roleId, ownerId, memberId) {
     try {
         const existingInvitations = await getRoleInvitations();
         const invitationExists = existingInvitations.some(invitation => invitation.role_id === roleId && invitation.member_id === memberId);
@@ -19,8 +19,8 @@ export async function createInvitation(roleId, memberId) {
         }
 
         const result = await db.query(
-            'INSERT INTO role_invitations (role_id, member_id) VALUES ($1, $2) RETURNING *',
-            [roleId, memberId]
+            'INSERT INTO role_invitations (role_id, owner_id, member_id) VALUES ($1, $2, $3) RETURNING *',
+            [roleId, ownerId, memberId]
         );
         return result[0];
     } catch (error) {
