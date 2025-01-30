@@ -1,8 +1,9 @@
 import { InteractionResponseType } from 'discord-interactions';
-import { roleOwners } from './createVipRole.js';
+import { createInvitation } from '../services/bff/role/roleInvitationService.js';
+import {getRoleById, getRoleOwnerByOwnerIdAndRoleId} from "../services/bff/role/roleService.js";
 
 export async function handleAddMemberToRoleCommand(req, res) {
-    const { guild_id, data, member } = req.body;
+    const { data, member } = req.body;
 
     if (!data || !data.options) {
         return res.send({
@@ -25,8 +26,8 @@ export async function handleAddMemberToRoleCommand(req, res) {
         });
     }
 
-    const ownerId = roleOwners.get(roleId);
-    if (ownerId !== member.user.id) {
+    const owner = await getRoleOwnerByOwnerIdAndRoleId(memberId, roleId);
+    if (!owner) {
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
@@ -36,22 +37,12 @@ export async function handleAddMemberToRoleCommand(req, res) {
     }
 
     try {
-        const response = await fetch(`https://discord.com/api/v10/guilds/${guild_id}/members/${memberId}/roles/${roleId}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error adding member to role: ${response.statusText}`);
-        }
+        await createInvitation(roleId, memberId);
 
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
-                content: `Member added to role successfully!`,
+                content: `Invitation created successfully!`,
             },
         });
     } catch (error) {
@@ -59,7 +50,7 @@ export async function handleAddMemberToRoleCommand(req, res) {
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
-                content: `Failed to add member to role: ${error.message}`,
+                content: `Failed to create invitation: ${error.message}`,
             },
         });
     }

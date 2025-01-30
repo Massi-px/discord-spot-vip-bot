@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import DiscordCommandManager from '../DiscordCommandManager.js';
-import {roleOwners} from "./createVipRole.js";
 
 const commandManager = new DiscordCommandManager(process.env.APP_ID);
 

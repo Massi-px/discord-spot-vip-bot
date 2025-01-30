@@ -1,4 +1,3 @@
-// src/routes/interactions.js
 import express from 'express';
 import { verifyKeyMiddleware } from 'discord-interactions';
 import { interactionHandler } from '../middleware/interactionHandler.js';

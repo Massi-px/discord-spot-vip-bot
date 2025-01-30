@@ -1,6 +1,5 @@
 import { InteractionResponseType } from 'discord-interactions';
-
-const roleOwners = new Map();
+import {createRole, getRoles} from '../services/bff/role/roleService.js';
 
 export async function handleCreateRoleCommand(req, res) {
     const { guild_id, data } = req.body;
@@ -8,6 +7,16 @@ export async function handleCreateRoleCommand(req, res) {
     const ownerId = data.options.find(option => option.name === 'owner').value;
 
     try {
+        const roles = await getRoles();
+        if (roles.some(role => role.name === roleName)) {
+            return res.send({
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: {
+                    content: `Role ${roleName} already exists!`,
+                },
+            });
+        }
+
         const response = await fetch(`https://discord.com/api/v10/guilds/${guild_id}/roles`, {
             method: 'POST',
             headers: {
@@ -19,10 +28,6 @@ export async function handleCreateRoleCommand(req, res) {
                 permissions: 0,
             }),
         });
-
-        if (!response.ok) {
-            throw new Error(`Error creating role: ${response.statusText}`);
-        }
 
         const role = await response.json();
 
@@ -38,8 +43,7 @@ export async function handleCreateRoleCommand(req, res) {
             throw new Error(`Error adding role to owner: ${memberResponse.statusText}`);
         }
 
-        // Store the owner information
-        roleOwners.set(role.id, ownerId);
+        await createRole(role.name, ownerId);
 
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -57,5 +61,3 @@ export async function handleCreateRoleCommand(req, res) {
         });
     }
 }
-
-export { roleOwners };
