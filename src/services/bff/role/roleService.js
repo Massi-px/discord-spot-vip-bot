@@ -34,7 +34,7 @@ export async function getRoleById(roleId) {
 
 export async function getRoleOwnerByOwnerId(ownerId) {
     try {
-        return await db.query('SELECT owner_id FROM roles WHERE owner_id = $1', [ownerId]);
+        return await db.query('SELECT id, name FROM roles WHERE owner_id = $1', [ownerId]);
     } catch (error) {
         console.error('Error getting role by owner ID:', error);
         throw error;
