@@ -1,5 +1,6 @@
 import { InteractionResponseType } from 'discord-interactions';
-import { updateInvitationStatus } from '../services/bff/role/roleInvitationService.js';
+import { updateInvitationStatus } from '../models/roleInvitationService.js';
+import {putMemberToRole} from "../models/roleService.js";
 
 export async function handleAcceptRoleVipCommand(req, res) {
     const { data, member, guild_id } = req.body;
@@ -13,7 +14,7 @@ export async function handleAcceptRoleVipCommand(req, res) {
         });
     }
 
-    const roleId = data.options.find(option => option.name === 'roleid')?.value;
+    const roleId = data.options.find(option => option.name === 'invitation_role_request')?.value;
     const memberId = member.user.id;
 
     try {
@@ -39,6 +40,8 @@ export async function handleAcceptRoleVipCommand(req, res) {
         if (!response.ok) {
             throw new Error(`Error adding role to member: ${response.statusText}`);
         }
+
+        await putMemberToRole(roleId, member.user.global_name);
 
         return res.send({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

@@ -1,6 +1,6 @@
 import { InteractionResponseType } from 'discord-interactions';
-import { createInvitation } from '../services/bff/role/roleInvitationService.js';
-import {getRoleById, getRoleOwnerByOwnerIdAndRoleId} from "../services/bff/role/roleService.js";
+import { createInvitation } from '../models/roleInvitationService.js';
+import {getRoleOwnerByOwnerIdAndRoleId, getRoleById, getMemberCountByRoleId} from "../models/roleService.js";
 
 export async function handleAddMemberToRoleCommand(req, res) {
     const { data, member } = req.body;
@@ -14,7 +14,7 @@ export async function handleAddMemberToRoleCommand(req, res) {
         });
     }
 
-    const roleId = data.options.find(option => option.name === 'roleid')?.value;
+    const roleId = data.options.find(option => option.name === 'role_owned')?.value;
     const memberId = data.options.find(option => option.name === 'member')?.value;
 
     if (!roleId || !memberId) {
@@ -36,8 +36,19 @@ export async function handleAddMemberToRoleCommand(req, res) {
         });
     }
 
+    const role = await getRoleById(roleId);
+    const memberCount = await getMemberCountByRoleId(roleId);
+    console.log(memberCount);
+    if (memberCount >= role.members_max_count) {
+        return res.send({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                content: `The role is full.`,
+            },
+        });
+    }
+
     try {
-        console.log(member.user.id)
         await createInvitation(roleId, member.user.id, memberId);
 
         return res.send({

@@ -1,5 +1,5 @@
 import { InteractionResponseType } from 'discord-interactions';
-import {createRole, getRoles} from '../services/bff/role/roleService.js';
+import {createRole, getRoles} from '../models/roleService.js';
 
 export async function handleCreateRoleCommand(req, res) {
     const { guild_id, data } = req.body;

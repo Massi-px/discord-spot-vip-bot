@@ -42,10 +42,11 @@ commandManager.addCommand(
     [0, 1, 2],
     [
         {
-            type: 8,
-            name: 'roleid',
+            type: 3,
+            name: 'role_owned',
             description: 'ID of the role',
             required: true,
+            autocomplete: true,
         },
         {
             type: 6,
@@ -64,10 +65,11 @@ commandManager.addCommand(
     [0, 1, 2],
     [
         {
-            type: 8,
-            name: 'roleid',
+            type: 3,
+            name: 'invitation_role_request',
             description: 'ID of the role',
             required: true,
+            autocomplete: true,
         },
     ]
 );

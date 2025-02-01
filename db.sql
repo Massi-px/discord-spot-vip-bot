@@ -6,7 +6,9 @@ CREATE TABLE  roles (
      id BIGSERIAL PRIMARY KEY,
      name VARCHAR(255) UNIQUE NOT NULL,
      owner_id VARCHAR(255) NOT NULL,
-     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+     member_ids VARCHAR(255)[] DEFAULT '{}',
+    members_max_count INT DEFAULT 5,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE  role_invitations (

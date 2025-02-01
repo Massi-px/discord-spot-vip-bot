@@ -1,6 +1,6 @@
 import express from 'express';
 import { verifyKeyMiddleware } from 'discord-interactions';
-import { interactionHandler } from '../middleware/interactionHandler.js';
+import { interactionHandler } from '../handlers/interactionHandler.js';
 
 const router = express.Router();
 
