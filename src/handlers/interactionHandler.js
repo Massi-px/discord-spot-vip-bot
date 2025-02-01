@@ -1,11 +1,10 @@
 import { InteractionType, InteractionResponseType } from 'discord-interactions';
 import { commandHandlers } from './commandHandler.js';
-import { getRoleOwnerByOwnerId } from '../models/roleService.js';
 import {handleRoleOwnedAutocomplete} from "./autocomplete/roleAutocomplete.js";
 import {handleInvitationRoleRequestAutocomplete} from "./autocomplete/invitationRoleAutocomplete.js";
 
 export async function interactionHandler(req, res) {
-    const { type, data, member } = req.body;
+    const { type, data } = req.body;
 
     if (type === InteractionType.PING) {
         return res.send({ type: InteractionResponseType.PONG });
